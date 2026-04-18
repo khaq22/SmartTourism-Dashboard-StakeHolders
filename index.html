@@ -91,7 +91,7 @@
         </div>
         
         <a href="https://khaq22.github.io/SmartTourism-Semarang-User/" target="_blank" style="display:block; text-align:center; background:#ecf0f1; color:#34495e; padding:12px; border-radius:8px; text-decoration:none; font-weight:bold; font-size:13px; margin-top:20px; transition:0.3s; border:1px solid #bdc3c7;">
-            <i class="fa-solid fa-external-link-alt"></i> Buka Aplikasi Wisatawan
+            <i class="fa-solid fa-external-link-alt"></i> Buka SmartTourism Navigator
         </a>
     </div>
 
@@ -143,80 +143,4 @@
             </div>
             <div class="sh-card">
                 <div class="sh-header">
-                    <div class="sh-icon" style="background:#e67e22;"><i class="fa-solid fa-ticket"></i></div>
-                    <div class="sh-title">Pengelola Destinasi Utama</div>
-                </div>
-                <div class="sh-impact" id="shPengelola"></div>
-            </div>
-            <div class="sh-card">
-                <div class="sh-header">
-                    <div class="sh-icon" style="background:#27ae60;"><i class="fa-solid fa-shop"></i></div>
-                    <div class="sh-title">Pelaku UMKM & Warga Lokal</div>
-                </div>
-                <div class="sh-impact" id="shUMKM"></div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    let modeAktif = 'eksisting';
-
-    function formatRp(angka) {
-        if (angka >= 1e12) return "Rp " + (angka / 1e12).toFixed(2) + " Triliun";
-        if (angka >= 1e9) return "Rp " + (angka / 1e9).toFixed(1) + " Miliar";
-        if (angka >= 1e6) return "Rp " + (angka / 1e6).toFixed(1) + " Juta";
-        return "Rp " + angka.toLocaleString('id-ID');
-    }
-
-    function setMode(mode) {
-        modeAktif = mode;
-        document.getElementById('btnEksisting').className = mode === 'eksisting' ? 'mode-btn active' : 'mode-btn';
-        document.getElementById('btnSmart').className = mode === 'smarttour' ? 'mode-btn active' : 'mode-btn';
-        calculateData();
-    }
-
-    function calculateData() {
-        const w = parseInt(document.getElementById('slideWisatawan').value);
-        const p = parseInt(document.getElementById('inputPengeluaran').value);
-        
-        document.getElementById('valWisatawan').innerText = w.toLocaleString('id-ID') + " Orang";
-        document.getElementById('valPengeluaran').innerText = "Rp " + p.toLocaleString('id-ID');
-
-        const totalEkon = w * p;
-        const rasioUtama = modeAktif === 'eksisting' ? 0.81 : 0.57;
-        const rasioUMKM = modeAktif === 'eksisting' ? 0.19 : 0.43;
-
-        const ekonUtama = totalEkon * rasioUtama;
-        const ekonUMKM = totalEkon * rasioUMKM;
-
-        document.getElementById('kpiTotal').innerText = formatRp(totalEkon);
-        document.getElementById('kpiUtama').innerText = formatRp(ekonUtama);
-        document.getElementById('kpiUMKM').innerText = formatRp(ekonUMKM);
-
-        document.getElementById('barUtama').style.width = (rasioUtama * 100) + "%";
-        document.getElementById('barUtama').innerText = Math.round(rasioUtama * 100) + "%";
-        document.getElementById('barUMKM').style.width = (rasioUMKM * 100) + "%";
-        document.getElementById('barUMKM').innerText = Math.round(rasioUMKM * 100) + "%";
-
-        if (modeAktif === 'eksisting') {
-            document.getElementById('shPemkot').innerHTML = `Pendapatan Asli Daerah (PAD) terkonsentrasi di pusat kota. Pertumbuhan kawasan pinggiran lambat. <br><span class="sh-highlight" style="background:#fadbd8; color:#c0392b;"><i class="fa-solid fa-triangle-exclamation"></i> Infrastruktur Pusat Terbebani</span>`;
-            document.getElementById('shDisbudpar').innerHTML = `Ketimpangan rasio <b>81% vs 19%</b> gagal memenuhi target pemerataan pariwisata daerah. Promosi desa wisata tidak efektif.`;
-            document.getElementById('shPengelola').innerHTML = `Menghadapi <b>${Math.round(w * 0.81).toLocaleString('id-ID')} pengunjung</b>. Risiko <i>overcapacity</i>, penurunan kualitas layanan, dan komplain tinggi.`;
-            document.getElementById('shUMKM').innerHTML = `Hanya memperebutkan perputaran dana <b>${formatRp(ekonUMKM)}</b>. Skala usaha sulit berkembang karena sepi pengunjung di luar pusat.`;
-        } else {
-            const wisataBeralih = w * 0.24; 
-            const danaBeralih = wisataBeralih * p;
-            document.getElementById('shPemkot').innerHTML = `Pajak dan retribusi tersebar merata di berbagai kecamatan. Penurunan drastis pada biaya perbaikan jalan pusat kota.<br><span class="sh-highlight" style="background:#d5f5e3; color:#27ae60;"><i class="fa-solid fa-check-double"></i> Efisiensi Anggaran & PAD Merata</span>`;
-            document.getElementById('shDisbudpar').innerHTML = `Target strategis tercapai! Rasio ketimpangan turun menjadi <b>57% vs 43%</b>. Mengindikasikan kesuksesan promosi klaster pinggiran.`;
-            document.getElementById('shPengelola').innerHTML = `Kunjungan lebih terkendali di <b>${Math.round(w * 0.57).toLocaleString('id-ID')} orang</b>. Kualitas pelayanan (CHSE) dan masa tinggal meningkat.`;
-            document.getElementById('shUMKM').innerHTML = `Mendapat injeksi dana segar <b>${formatRp(danaBeralih)}</b> langsung ke kantong ekonomi kreatif dan desa wisata. Pertumbuhan lokal melesat!`;
-        }
-    }
-
-    document.getElementById('slideWisatawan').addEventListener('input', calculateData);
-    document.getElementById('inputPengeluaran').addEventListener('input', calculateData);
-    calculateData();
-</script>
-</body>
-</html>
+                    <div class="sh-icon" style="background:#e67e22;"><i class="fa-solid fa-ticket"></i>
