@@ -33,12 +33,13 @@
         .kpi-value { font-size: 26px; font-weight: 900; color: #2c3e50; }
         .kpi-sub { font-size: 12px; color: #95a5a6; margin-top: 5px; }
 
-        /* Grafik Distribusi */
+        /* Grafik Distribusi (CSS Based) */
         .chart-card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
         .chart-bar-container { display: flex; height: 40px; border-radius: 20px; overflow: hidden; margin-top: 15px; background: #ecf0f1; }
         .chart-segment { height: 100%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 14px; transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
         .seg-utama { background: #e74c3c; }
         .seg-umkm { background: #27ae60; }
+        
         .chart-legend { display: flex; justify-content: space-between; margin-top: 15px; font-size: 14px; font-weight: bold; color: #34495e; }
 
         /* Panel Stakeholder */
@@ -50,22 +51,13 @@
         .sh-impact { font-size: 14px; color: #555; line-height: 1.5; }
         .sh-highlight { display: inline-block; padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 12px; margin-top: 10px;}
 
-        /* Responsif untuk HP */
-        @media (max-width: 900px) {
-            .container { grid-template-columns: 1fr; }
-            .kpi-grid { grid-template-columns: 1fr; }
-            .stakeholder-grid { grid-template-columns: 1fr; }
-            .header { flex-direction: column; gap: 10px; text-align: center; }
-        }
     </style>
 </head>
 <body>
 
 <div class="header">
     <h1><i class="fa-solid fa-chart-line"></i> Dashboard Eksekutif SmartTourism</h1>
-    <div style="font-size: 14px; background: rgba(255,255,255,0.2); padding: 5px 15px; border-radius: 20px;">
-        <i class="fa-solid fa-building-columns"></i> Akses: Pemerintah & Stakeholder
-    </div>
+    <div style="font-size: 14px;"><i class="fa-solid fa-building-columns"></i> Akses: Pemerintah & Stakeholder</div>
 </div>
 
 <div class="container">
@@ -89,13 +81,10 @@
             <span class="val-display" id="valPengeluaran">Rp 150.000</span>
             <input type="number" id="inputPengeluaran" value="150000" step="10000">
         </div>
-        
-        <a href="https://khaq22.github.io/SmartTourism-Semarang-User/" target="_blank" style="display:block; text-align:center; background:#ecf0f1; color:#34495e; padding:12px; border-radius:8px; text-decoration:none; font-weight:bold; font-size:13px; margin-top:20px; transition:0.3s; border:1px solid #bdc3c7;">
-            <i class="fa-solid fa-external-link-alt"></i> Buka SmartTourism Navigator
-        </a>
     </div>
 
     <div class="main-panel">
+        
         <div class="kpi-grid">
             <div class="kpi-card">
                 <div class="kpi-title"><i class="fa-solid fa-sack-dollar"></i> Total Perputaran Ekonomi</div>
@@ -132,30 +121,31 @@
                     <div class="sh-icon" style="background:#34495e;"><i class="fa-solid fa-building-user"></i></div>
                     <div class="sh-title">Pemerintah Kota (Pemkot)</div>
                 </div>
-                <div class="sh-impact" id="shPemkot"></div>
+                <div class="sh-impact" id="shPemkot">Menunggu kalkulasi...</div>
             </div>
             <div class="sh-card">
                 <div class="sh-header">
                     <div class="sh-icon" style="background:#8e44ad;"><i class="fa-solid fa-map-location-dot"></i></div>
                     <div class="sh-title">Dinas Pariwisata (Disbudpar)</div>
                 </div>
-                <div class="sh-impact" id="shDisbudpar"></div>
+                <div class="sh-impact" id="shDisbudpar">Menunggu kalkulasi...</div>
             </div>
             <div class="sh-card">
                 <div class="sh-header">
                     <div class="sh-icon" style="background:#e67e22;"><i class="fa-solid fa-ticket"></i></div>
                     <div class="sh-title">Pengelola Destinasi Utama</div>
                 </div>
-                <div class="sh-impact" id="shPengelola"></div>
+                <div class="sh-impact" id="shPengelola">Menunggu kalkulasi...</div>
             </div>
             <div class="sh-card">
                 <div class="sh-header">
                     <div class="sh-icon" style="background:#27ae60;"><i class="fa-solid fa-shop"></i></div>
                     <div class="sh-title">Pelaku UMKM & Warga Lokal</div>
                 </div>
-                <div class="sh-impact" id="shUMKM"></div>
+                <div class="sh-impact" id="shUMKM">Menunggu kalkulasi...</div>
             </div>
         </div>
+
     </div>
 </div>
 
@@ -184,6 +174,7 @@
         document.getElementById('valPengeluaran').innerText = "Rp " + p.toLocaleString('id-ID');
 
         const totalEkon = w * p;
+        
         const rasioUtama = modeAktif === 'eksisting' ? 0.81 : 0.57;
         const rasioUMKM = modeAktif === 'eksisting' ? 0.19 : 0.43;
 
@@ -201,21 +192,29 @@
 
         if (modeAktif === 'eksisting') {
             document.getElementById('shPemkot').innerHTML = `Pendapatan Asli Daerah (PAD) terkonsentrasi di pusat kota. Pertumbuhan kawasan pinggiran lambat. <br><span class="sh-highlight" style="background:#fadbd8; color:#c0392b;"><i class="fa-solid fa-triangle-exclamation"></i> Infrastruktur Pusat Terbebani</span>`;
-            document.getElementById('shDisbudpar').innerHTML = `Ketimpangan rasio <b>81% vs 19%</b> gagal memenuhi target pemerataan pariwisata daerah. Promosi desa wisata tidak efektif.`;
-            document.getElementById('shPengelola').innerHTML = `Menghadapi <b>${Math.round(w * 0.81).toLocaleString('id-ID')} pengunjung</b>. Risiko <i>overcapacity</i>, penurunan kualitas layanan, dan komplain tinggi.`;
-            document.getElementById('shUMKM').innerHTML = `Hanya memperebutkan perputaran dana <b>${formatRp(ekonUMKM)}</b>. Skala usaha sulit berkembang karena sepi pengunjung di luar pusat.`;
+            
+            document.getElementById('shDisbudpar').innerHTML = `Ketimpangan rasio <b>81% vs 19%</b> gagal memenuhi target pemerataan pariwisata daerah. Promosi desa wisata tidak efektif karena turis terjebak di rute populer.`;
+            
+            document.getElementById('shPengelola').innerHTML = `Menghadapi <b>${Math.round(w * 0.81).toLocaleString('id-ID')} pengunjung</b>. Risiko <i>overcapacity</i>, penurunan kualitas layanan, fasilitas cepat rusak, dan komplain kemacetan tinggi.`;
+            
+            document.getElementById('shUMKM').innerHTML = `Hanya memperebutkan perputaran dana sebesar <b>${formatRp(ekonUMKM)}</b>. Skala usaha sulit berkembang karena sepi pengunjung di luar pusat kota.`;
         } else {
             const wisataBeralih = w * 0.24; 
             const danaBeralih = wisataBeralih * p;
-            document.getElementById('shPemkot').innerHTML = `Pajak dan retribusi tersebar merata di berbagai kecamatan. Penurunan drastis pada biaya perbaikan jalan pusat kota.<br><span class="sh-highlight" style="background:#d5f5e3; color:#27ae60;"><i class="fa-solid fa-check-double"></i> Efisiensi Anggaran & PAD Merata</span>`;
-            document.getElementById('shDisbudpar').innerHTML = `Target strategis tercapai! Rasio ketimpangan turun menjadi <b>57% vs 43%</b>. Mengindikasikan kesuksesan promosi klaster pinggiran.`;
-            document.getElementById('shPengelola').innerHTML = `Kunjungan lebih terkendali di <b>${Math.round(w * 0.57).toLocaleString('id-ID')} orang</b>. Kualitas pelayanan (CHSE) dan masa tinggal meningkat.`;
-            document.getElementById('shUMKM').innerHTML = `Mendapat injeksi dana segar <b>${formatRp(danaBeralih)}</b> langsung ke kantong ekonomi kreatif dan desa wisata. Pertumbuhan lokal melesat!`;
+            
+            document.getElementById('shPemkot').innerHTML = `Pajak dan retribusi kini tersebar merata di berbagai kecamatan. Penurunan drastis pada biaya perbaikan jalan dan kemacetan pusat kota.<br><span class="sh-highlight" style="background:#d5f5e3; color:#27ae60;"><i class="fa-solid fa-check-double"></i> Efisiensi Anggaran & PAD Merata</span>`;
+            
+            document.getElementById('shDisbudpar').innerHTML = `Target strategis tercapai! Rasio ketimpangan turun menjadi <b>57% vs 43%</b>. Mengindikasikan kesuksesan integrasi dan promosi silang klaster pariwisata pinggiran.`;
+            
+            document.getElementById('shPengelola').innerHTML = `Kunjungan lebih terkendali di angka <b>${Math.round(w * 0.57).toLocaleString('id-ID')} orang</b>. Kualitas pelayanan (CHSE) meningkat, masa tinggal (<i>length of stay</i>) lebih lama karena turis merasa nyaman.`;
+            
+            document.getElementById('shUMKM').innerHTML = `Mendapat injeksi dana segar sebesar <b>${formatRp(danaBeralih)}</b> langsung ke kantong ekonomi kreatif, suvenir, dan kuliner di desa wisata. Pertumbuhan ekonomi lokal melesat!`;
         }
     }
 
     document.getElementById('slideWisatawan').addEventListener('input', calculateData);
     document.getElementById('inputPengeluaran').addEventListener('input', calculateData);
+
     calculateData();
 </script>
 </body>
