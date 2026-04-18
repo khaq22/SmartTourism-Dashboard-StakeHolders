@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartTourism - Executive Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body, html { margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; color: #2c3e50; }
+        .header { background: #2c3e50; color: white; padding: 20px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .header h1 { margin: 0; font-size: 22px; }
+        .container { padding: 25px; max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 300px 1fr; gap: 25px; }
+        
+        /* Panel Kontrol Kiri */
+        .control-panel { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); height: fit-content; }
+        .control-group { margin-bottom: 20px; }
+        label { display: block; font-size: 13px; font-weight: bold; color: #7f8c8d; text-transform: uppercase; margin-bottom: 8px; }
+        input[type="range"], input[type="number"] { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #bdc3c7; font-size: 15px; box-sizing: border-box; }
+        .val-display { font-size: 18px; font-weight: bold; color: #2980b9; margin-bottom: 10px; display: block; }
+        
+        .mode-btn { width: 100%; padding: 12px; text-align: center; border: 2px solid #2980b9; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 14px; transition: 0.3s; background: white; color: #2980b9; margin-bottom: 10px; }
+        .mode-btn.active { background: #2980b9; color: white; box-shadow: 0 4px 10px rgba(41, 128, 185, 0.3); }
+
+        /* Area Utama Kanan */
+        .main-panel { display: flex; flex-direction: column; gap: 25px; }
+        
+        /* KPI Cards */
+        .kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .kpi-card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-left: 5px solid #3498db; }
+        .kpi-card.umkm { border-left-color: #27ae60; }
+        .kpi-card.utama { border-left-color: #e74c3c; }
+        .kpi-title { font-size: 13px; font-weight: bold; color: #7f8c8d; text-transform: uppercase; margin-bottom: 10px; }
+        .kpi-value { font-size: 26px; font-weight: 900; color: #2c3e50; }
+        .kpi-sub { font-size: 12px; color: #95a5a6; margin-top: 5px; }
+
+        /* Grafik Distribusi (CSS Based) */
+        .chart-card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .chart-bar-container { display: flex; height: 40px; border-radius: 20px; overflow: hidden; margin-top: 15px; background: #ecf0f1; }
+        .chart-segment { height: 100%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 14px; transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
+        .seg-utama { background: #e74c3c; }
+        .seg-umkm { background: #27ae60; }
+        
+        .chart-legend { display: flex; justify-content: space-between; margin-top: 15px; font-size: 14px; font-weight: bold; color: #34495e; }
+
+        /* Panel Stakeholder */
+        .stakeholder-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+        .sh-card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .sh-header { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; border-bottom: 1px solid #ecf0f1; padding-bottom: 10px;}
+        .sh-icon { width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; }
+        .sh-title { font-weight: bold; font-size: 16px; color: #2c3e50; }
+        .sh-impact { font-size: 14px; color: #555; line-height: 1.5; }
+        .sh-highlight { display: inline-block; padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 12px; margin-top: 10px;}
+
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1><i class="fa-solid fa-chart-line"></i> Dashboard Eksekutif SmartTourism</h1>
+    <div style="font-size: 14px;"><i class="fa-solid fa-building-columns"></i> Akses: Pemerintah & Stakeholder</div>
+</div>
+
+<div class="container">
+    <div class="control-panel">
+        <div class="control-group">
+            <label>Model Distribusi</label>
+            <div class="mode-btn active" id="btnEksisting" onclick="setMode('eksisting')">Kondisi Eksisting</div>
+            <div class="mode-btn" id="btnSmart" onclick="setMode('smarttour')"><i class="fa-solid fa-wand-magic-sparkles"></i> SmartTour Aktif</div>
+        </div>
+
+        <hr style="border:0; border-top:1px solid #ecf0f1; margin:20px 0;">
+
+        <div class="control-group">
+            <label>Volume Wisatawan (Tahunan)</label>
+            <span class="val-display" id="valWisatawan">6.482.736 Orang</span>
+            <input type="range" id="slideWisatawan" min="1000000" max="10000000" step="100000" value="6482736">
+        </div>
+        
+        <div class="control-group">
+            <label>Asumsi Belanja per Kapita (Rp)</label>
+            <span class="val-display" id="valPengeluaran">Rp 150.000</span>
+            <input type="number" id="inputPengeluaran" value="150000" step="10000">
+        </div>
+    </div>
+
+    <div class="main-panel">
+        
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-title"><i class="fa-solid fa-sack-dollar"></i> Total Perputaran Ekonomi</div>
+                <div class="kpi-value" id="kpiTotal">Rp 0</div>
+                <div class="kpi-sub">Total pengeluaran di Kota Semarang</div>
+            </div>
+            <div class="kpi-card utama">
+                <div class="kpi-title"><i class="fa-solid fa-landmark"></i> Terserap di Hub Utama</div>
+                <div class="kpi-value" id="kpiUtama">Rp 0</div>
+                <div class="kpi-sub" id="subUtama">Konsentrasi di pusat kota</div>
+            </div>
+            <div class="kpi-card umkm">
+                <div class="kpi-title"><i class="fa-solid fa-store"></i> Terdistribusi ke UMKM</div>
+                <div class="kpi-value" id="kpiUMKM">Rp 0</div>
+                <div class="kpi-sub" id="subUMKM" style="color: #27ae60; font-weight: bold;">Potensi ekonomi pinggiran</div>
+            </div>
+        </div>
+
+        <div class="chart-card">
+            <div class="kpi-title">Visualisasi Ketimpangan vs Pemerataan Ekonomi</div>
+            <div class="chart-bar-container">
+                <div class="chart-segment seg-utama" id="barUtama" style="width: 81%;">81%</div>
+                <div class="chart-segment seg-umkm" id="barUMKM" style="width: 19%;">19%</div>
+            </div>
+            <div class="chart-legend">
+                <div style="color: #c0392b;"><i class="fa-solid fa-square"></i> Destinasi Utama (Pusat)</div>
+                <div style="color: #27ae60;"><i class="fa-solid fa-square"></i> UMKM & Destinasi Alternatif</div>
+            </div>
+        </div>
+
+        <div class="stakeholder-grid">
+            <div class="sh-card">
+                <div class="sh-header">
+                    <div class="sh-icon" style="background:#34495e;"><i class="fa-solid fa-building-user"></i></div>
+                    <div class="sh-title">Pemerintah Kota (Pemkot)</div>
+                </div>
+                <div class="sh-impact" id="shPemkot">Menunggu kalkulasi...</div>
+            </div>
+            <div class="sh-card">
+                <div class="sh-header">
+                    <div class="sh-icon" style="background:#8e44ad;"><i class="fa-solid fa-map-location-dot"></i></div>
+                    <div class="sh-title">Dinas Pariwisata (Disbudpar)</div>
+                </div>
+                <div class="sh-impact" id="shDisbudpar">Menunggu kalkulasi...</div>
+            </div>
+            <div class="sh-card">
+                <div class="sh-header">
+                    <div class="sh-icon" style="background:#e67e22;"><i class="fa-solid fa-ticket"></i></div>
+                    <div class="sh-title">Pengelola Destinasi Utama</div>
+                </div>
+                <div class="sh-impact" id="shPengelola">Menunggu kalkulasi...</div>
+            </div>
+            <div class="sh-card">
+                <div class="sh-header">
+                    <div class="sh-icon" style="background:#27ae60;"><i class="fa-solid fa-shop"></i></div>
+                    <div class="sh-title">Pelaku UMKM & Warga Lokal</div>
+                </div>
+                <div class="sh-impact" id="shUMKM">Menunggu kalkulasi...</div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    let modeAktif = 'eksisting';
+
+    function formatRp(angka) {
+        if (angka >= 1e12) return "Rp " + (angka / 1e12).toFixed(2) + " Triliun";
+        if (angka >= 1e9) return "Rp " + (angka / 1e9).toFixed(1) + " Miliar";
+        if (angka >= 1e6) return "Rp " + (angka / 1e6).toFixed(1) + " Juta";
+        return "Rp " + angka.toLocaleString('id-ID');
+    }
+
+    function setMode(mode) {
+        modeAktif = mode;
+        document.getElementById('btnEksisting').className = mode === 'eksisting' ? 'mode-btn active' : 'mode-btn';
+        document.getElementById('btnSmart').className = mode === 'smarttour' ? 'mode-btn active' : 'mode-btn';
+        calculateData();
+    }
+
+    function calculateData() {
+        const w = parseInt(document.getElementById('slideWisatawan').value);
+        const p = parseInt(document.getElementById('inputPengeluaran').value);
+        
+        document.getElementById('valWisatawan').innerText = w.toLocaleString('id-ID') + " Orang";
+        document.getElementById('valPengeluaran').innerText = "Rp " + p.toLocaleString('id-ID');
+
+        const totalEkon = w * p;
+        
+        const rasioUtama = modeAktif === 'eksisting' ? 0.81 : 0.57;
+        const rasioUMKM = modeAktif === 'eksisting' ? 0.19 : 0.43;
+
+        const ekonUtama = totalEkon * rasioUtama;
+        const ekonUMKM = totalEkon * rasioUMKM;
+
+        document.getElementById('kpiTotal').innerText = formatRp(totalEkon);
+        document.getElementById('kpiUtama').innerText = formatRp(ekonUtama);
+        document.getElementById('kpiUMKM').innerText = formatRp(ekonUMKM);
+
+        document.getElementById('barUtama').style.width = (rasioUtama * 100) + "%";
+        document.getElementById('barUtama').innerText = Math.round(rasioUtama * 100) + "%";
+        document.getElementById('barUMKM').style.width = (rasioUMKM * 100) + "%";
+        document.getElementById('barUMKM').innerText = Math.round(rasioUMKM * 100) + "%";
+
+        if (modeAktif === 'eksisting') {
+            document.getElementById('shPemkot').innerHTML = `Pendapatan Asli Daerah (PAD) terkonsentrasi di pusat kota. Pertumbuhan kawasan pinggiran lambat. <br><span class="sh-highlight" style="background:#fadbd8; color:#c0392b;"><i class="fa-solid fa-triangle-exclamation"></i> Infrastruktur Pusat Terbebani</span>`;
+            
+            document.getElementById('shDisbudpar').innerHTML = `Ketimpangan rasio <b>81% vs 19%</b> gagal memenuhi target pemerataan pariwisata daerah. Promosi desa wisata tidak efektif karena turis terjebak di rute populer.`;
+            
+            document.getElementById('shPengelola').innerHTML = `Menghadapi <b>${Math.round(w * 0.81).toLocaleString('id-ID')} pengunjung</b>. Risiko <i>overcapacity</i>, penurunan kualitas layanan, fasilitas cepat rusak, dan komplain kemacetan tinggi.`;
+            
+            document.getElementById('shUMKM').innerHTML = `Hanya memperebutkan perputaran dana sebesar <b>${formatRp(ekonUMKM)}</b>. Skala usaha sulit berkembang karena sepi pengunjung di luar pusat kota.`;
+        } else {
+            const wisataBeralih = w * 0.24; 
+            const danaBeralih = wisataBeralih * p;
+            
+            document.getElementById('shPemkot').innerHTML = `Pajak dan retribusi kini tersebar merata di berbagai kecamatan. Penurunan drastis pada biaya perbaikan jalan dan kemacetan pusat kota.<br><span class="sh-highlight" style="background:#d5f5e3; color:#27ae60;"><i class="fa-solid fa-check-double"></i> Efisiensi Anggaran & PAD Merata</span>`;
+            
+            document.getElementById('shDisbudpar').innerHTML = `Target strategis tercapai! Rasio ketimpangan turun menjadi <b>57% vs 43%</b>. Mengindikasikan kesuksesan integrasi dan promosi silang klaster pariwisata pinggiran.`;
+            
+            document.getElementById('shPengelola').innerHTML = `Kunjungan lebih terkendali di angka <b>${Math.round(w * 0.57).toLocaleString('id-ID')} orang</b>. Kualitas pelayanan (CHSE) meningkat, masa tinggal (<i>length of stay</i>) lebih lama karena turis merasa nyaman.`;
+            
+            document.getElementById('shUMKM').innerHTML = `Mendapat injeksi dana segar sebesar <b>${formatRp(danaBeralih)}</b> langsung ke kantong ekonomi kreatif, suvenir, dan kuliner di desa wisata. Pertumbuhan ekonomi lokal melesat!`;
+        }
+    }
+
+    document.getElementById('slideWisatawan').addEventListener('input', calculateData);
+    document.getElementById('inputPengeluaran').addEventListener('input', calculateData);
+
+    calculateData();
+</script>
+</body>
+</html>
